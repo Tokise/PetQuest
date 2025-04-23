@@ -1,0 +1,19 @@
+.qr-code-container {
+    padding: 10px;
+    text-align: center;
+}
+
+.qr-code-container div {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.qr-code-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
