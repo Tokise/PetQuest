@@ -1,0 +1,325 @@
+/* Missing Pets Page Styles */
+:root {
+    --card-bg: #ffffff;
+    --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --card-border-radius: 15px;
+    --card-hover-transform: translateY(-5px);
+    --filter-bg: rgba(255, 255, 255, 0.9);
+    --overlay-bg: rgba(0, 0, 0, 0.5);
+    --badge-bg: rgba(244, 67, 54, 0.1);
+    --badge-color: #f44336;
+}
+
+/* Search and Filters */
+.search-filters {
+    background: var(--filter-bg);
+    padding: 1.5rem;
+    border-radius: var(--card-border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(10px);
+    top: 80px;
+    z-index: 100;
+    margin-top: 50px;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+.search-input, .filter-select, .location-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus, .filter-select:focus, .location-input:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+    outline: none;
+}
+
+.filter-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+/* Pets Grid */
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.pet-card {
+    background: var(--card-bg);
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.pet-card:hover {
+    transform: var(--card-hover-transform);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.pet-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.pet-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.pet-card:hover .pet-image {
+    transform: scale(1.05);
+}
+
+.pet-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--input-bg);
+    color: var(--primary-color);
+    font-size: 3rem;
+}
+
+.pet-image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(transparent, var(--overlay-bg));
+    color: white;
+}
+
+.days-missing {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--badge-bg);
+    color: var(--badge-color);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.pet-info {
+    padding: 1.5rem;
+}
+
+.pet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.pet-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.status.missing {
+    background-color: var(--badge-bg);
+    color: var(--badge-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.pet-details {
+    color: var(--light-text);
+}
+
+.pet-details p {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pet-details i {
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.reporter-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--input-border);
+}
+
+.reporter-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.reporter-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.reporter-details {
+    flex: 1;
+}
+
+.reporter-name {
+    margin: 0;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.message-count {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--light-text);
+}
+
+.pet-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pet-actions .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-state img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+}
+
+.empty-state h3 {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--light-text);
+    margin-bottom: 1.5rem;
+}
+
+/* QR Code Container */
+.qr-code-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.pet-card:hover .qr-code-container {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .search-filters {
+        position: static;
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .pets-grid {
+        grid-template-columns: 1fr;
+        margin: 1rem;
+    }
+
+    .pet-actions {
+        flex-direction: column;
+    }
+
+    .qr-code-container {
+        display: none;
+    }
+}
+
+/* Loading State */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
