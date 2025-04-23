@@ -1,9 +1,18 @@
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
 /* Pet Details Page Styling */
 
 .details-container {
-    padding: 20px;
-    max-width: 1200px;
+    padding: 30px; /* Increased padding */
+    max-width: 1200px; /* Increased from 1000px for more space */
     margin: 0 auto;
+    margin-top: 60px;
 }
 
 .pet-details {
@@ -58,38 +67,52 @@
 .pet-content {
     display: flex;
     flex-wrap: wrap;
-    padding: 25px;
+    padding: 15px;
     gap: 30px;
+    align-items: flex-start; /* Align items to top */
 }
 
 .pet-image {
-    flex: 1;
-    min-width: 300px;
-    max-width: 450px;
-    border-radius: 8px;
+    flex: 0 0 600px; /* Fixed width instead of flexible */
+    max-width: 500px;
+    min-height: 600px; /* Set minimum height */
+    border-radius: 12px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 0 auto;
 }
 
 .pet-image img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     height: auto;
+    max-height: 400px; /* Increased max height */
     display: block;
-    border-radius: 8px;
-    object-fit: cover;
-    aspect-ratio: 4/3;
+    border-radius: 12px;
+    object-fit: contain;
 }
 
 .pet-info {
     flex: 1;
-    min-width: 300px;
+    min-width: 320px;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .info-group {
-    flex: 0 0 calc(50% - 15px);
-    margin-bottom: 5px;
+    flex: 0 0 calc(50% - 10px);
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
 }
 
 .info-group.full-width {
@@ -99,14 +122,15 @@
 .info-group label {
     display: block;
     font-weight: 600;
-    color: #666;
-    margin-bottom: 4px;
+    color: #444;
+    margin-bottom: 6px;
     font-size: 0.9rem;
 }
 
 .info-group span {
     color: #333;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
 }
 
 .description {
@@ -290,17 +314,42 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .pet-image {
+        flex: 0 0 100%;
+        max-width: 100%;
+        min-height: 400px;
+    }
+
+    .pet-image img {
+        max-height: 400px;
+    }
+}
+
 @media (max-width: 768px) {
     .pet-content {
         flex-direction: column;
+        padding: 15px;
+        gap: 20px;
     }
     
     .pet-image {
+        flex: 0 0 100%;
         max-width: 100%;
+        min-height: 400px;
+    }
+    
+    .pet-image img {
+        max-height: 400px;
     }
     
     .contact-form .form-group {
         flex: 0 0 100%;
+    }
+    
+    .details-container {
+        padding: 15px;
+        margin-top: 40px;
     }
     
     .pet-header {
@@ -320,4 +369,12 @@
     .qr-code {
         margin: 15px auto 0;
     }
-} 
+    
+    .pet-info {
+        padding: 20px;
+    }
+    
+    .info-group {
+        flex: 0 0 100%;
+    }
+}

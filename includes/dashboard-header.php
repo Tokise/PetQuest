@@ -2,32 +2,49 @@
 <!-- Dashboard Header -->
 <header class="dashboard-header">
     <div class="header-left">
-        <a href="<?php echo SITE_URL; ?>/landing/index.php" class="logo">
-            <img src="<?php echo SITE_URL; ?>/assets/images/logo.svg" alt="PetQuest">
+        <a href="<?php echo SITE_URL; ?>/src/dashboard/dashboard.php" class="logo">
+            <span class="logo-text">Pet<span class="logo-highlight">Quest</span></span>
         </a>
+        <?php
+        // Check if we're on profile or settings page
+        $currentPage = $_SERVER['REQUEST_URI'];
+        $isDashboard = strpos($currentPage, '/dashboard/') !== false;
+        $isMissing = strpos($currentPage, '/missing/') !== false;
+        $isReport = strpos($currentPage, '/report/') !== false;
+        $isProfilePage = strpos($currentPage, '/profile/') !== false;
+        $isSettingsPage = strpos($currentPage, '/settings/') !== false;
+        
+        if ($isProfilePage || $isSettingsPage):
+        ?>
+            <a href="<?php echo SITE_URL; ?>/src/dashboard/dashboard.php" class="close-section show" title="Back to Dashboard">
+                <i class="fas fa-times"></i>
+            </a>
+        <?php endif; ?>
     </div>
     
     <div class="header-center">
         <nav class="main-nav">
-            <?php
-            // Get current page to determine active menu item
-            $currentPage = $_SERVER['REQUEST_URI'];
-            $isDashboard = strpos($currentPage, '/dashboard/') !== false;
-            $isMissing = strpos($currentPage, '/missing/') !== false;
-            $isReport = strpos($currentPage, '/report/') !== false;
-            ?>
-            <a href="<?php echo SITE_URL; ?>/src/dashboard/dashboard.php" class="nav-item <?php echo $isDashboard ? 'active' : ''; ?>">
-                <i class="fas fa-home"></i>
-                <span class="tooltip">Dashboard</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/src/report/report-pet.php" class="nav-item <?php echo $isReport ? 'active' : ''; ?>">
-                <i class="fas fa-plus-circle"></i>
-                <span class="tooltip">Report Missing Pet</span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/src/missing/missing-pets.php" class="nav-item <?php echo $isMissing ? 'active' : ''; ?>">
-                <i class="fas fa-paw"></i>
-                <span class="tooltip">Missing Pets</span>
-            </a>
+            <?php if (!$isProfilePage && !$isSettingsPage): ?>
+                <a href="<?php echo SITE_URL; ?>/src/dashboard/dashboard.php" class="nav-item <?php echo $isDashboard ? 'active' : ''; ?>">
+                    <i class="fas fa-home"></i>
+                    <span class="tooltip">Dashboard</span>
+                </a>
+                <a href="<?php echo SITE_URL; ?>/src/report/report-pet.php" class="nav-item <?php echo $isReport ? 'active' : ''; ?>">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="tooltip">Report Missing Pet</span>
+                </a>
+                <a href="<?php echo SITE_URL; ?>/src/missing/missing-pets.php" class="nav-item <?php echo $isMissing ? 'active' : ''; ?>">
+                    <i class="fas fa-paw"></i>
+                    <span class="tooltip">Missing Pets</span>
+                </a>
+                <a href="<?php echo SITE_URL; ?>/src/messages/chat.php" class="nav-item <?php echo strpos($currentPage, '/messages/') !== false ? 'active' : ''; ?>">
+                    <i class="fas fa-comment-dots"></i>
+                    <span class="tooltip">Messages</span>
+                    <?php if (isset($unread_count) && $unread_count > 0): ?>
+                        <span class="nav-badge"><?php echo $unread_count; ?></span>
+                    <?php endif; ?>
+                </a>
+            <?php endif; ?>
         </nav>
     </div>
 
@@ -52,6 +69,9 @@
                 <div class="search-results-dropdown" id="searchResultsDropdown">
                     <div class="search-results-container" id="searchResultsContainer">
                         <!-- Search results will be loaded here -->
+                    </div>
+<div class="search-see-more-wrapper" id="searchSeeMoreWrapper">
+                        <!-- See more button will be dynamically added here -->
                     </div>
                 </div>
             </div>
@@ -167,15 +187,14 @@
                     </div>
                     
                     <div class="dropdown-menu">
-                        <a href="<?php echo SITE_URL; ?>/src/profile/index.php">
+                        <a href="<?php echo SITE_URL; ?>/src/profile/index.php" 
+                           class="<?php echo $isProfilePage ? 'active' : ''; ?>">
                             <i class="fas fa-user"></i>
                             My Profile
                         </a>
-                        <a href="<?php echo SITE_URL; ?>/src/messages/chat.php">
-                            <i class="fas fa-comment-dots"></i>
-                            Messages
-                        </a>
-                        <a href="<?php echo SITE_URL; ?>/src/settings/index.php">
+                    
+                        <a href="<?php echo SITE_URL; ?>/src/settings/index.php" 
+                           class="<?php echo $isSettingsPage ? 'active' : ''; ?>">
                             <i class="fas fa-sliders-h"></i>
                             Settings
                         </a>

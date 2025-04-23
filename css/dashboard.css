@@ -16,11 +16,60 @@
 
 .header-left {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-left .logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 .header-left .logo img {
-    height: 40px;
+    height: 80px;
     width: auto;
+}
+
+.logo-text {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: -0.5px;
+}
+
+.logo-highlight {
+    color: var(--primary-color);
+}
+
+.close-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
+    position: relative;
+}
+
+.close-section:hover {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--primary-color);
+}
+
+.close-section i {
+    font-size: 1.2rem;
+}
+
+.close-section.show {
+    display: flex;
+    margin: 15px;
 }
 
 .header-center {
@@ -80,6 +129,22 @@
 .main-nav .nav-item:hover::after,
 .main-nav .nav-item.active::after {
     width: 100%;
+}
+
+.nav-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
 }
 
 /* Tooltip styles for nav items */
@@ -330,6 +395,16 @@
     color: var(--primary-color);
 }
 
+.dropdown-menu a.active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.dropdown-menu a.active i {
+    color: var(--primary-color);
+}
+
 .dropdown-divider {
     height: 1px;
     background-color: var(--border-color);
@@ -346,8 +421,6 @@
     font-size: 0.7rem;
     font-weight: bold;
 }
-
-
 
 /* Revised Expandable Search Styles */
 .search-container {
@@ -422,13 +495,14 @@
     top: calc(100% + 5px);
     right: 0;
     width: 300px;
-    max-height: 400px;
+    max-height: 380px; /* Adjusted for 5 items */
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     z-index: 1000;
-    display: none;
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--border-color);
     transform: translateY(10px);
     opacity: 0;
@@ -442,24 +516,166 @@
 }
 
 .search-results-container {
-    padding: 10px;
-    max-height: 350px;
+    flex: 1;
+    max-height: 340px; /* Adjusted for 5 items */
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
 }
 
-.search-loading {
+/* Custom scrollbar styling */
+.search-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-results-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px; /* Slightly reduced padding */
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+.search-result-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-bottom: 2px;
+}
+
+.search-result-bio {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.search-result-action {
+    padding: 6px 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.search-result-action:hover {
+    background-color: #388e3c;
+    transform: translateY(-1px);
+}
+
+.search-loading,
+.search-loading-more,
+.no-search-results,
+.search-error {
+    padding: 16px;
     text-align: center;
-    padding: 20px;
-    color: #666;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.search-loading i,
+.search-loading-more i {
+    color: var(--primary-color);
+    margin-right: 8px;
+}
+
+.search-loading-more {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: white;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.search-loading-more i {
+    margin-right: 6px;
+    color: var(--primary-color);
+}
+
+.search-error {
+    color: var(--danger-color);
+}
+
+/* See More Button Styling */
+.search-see-more-wrapper {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-top: 1px solid var(--border-color);
+    z-index: 2;
+    display: none;
+}
+
+.search-see-more {
+    padding: 12px;
+    text-align: center;
+    color: var(--primary-color);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
 
-.search-loading i {
-    color: var(--primary-color);
-    font-size: 1rem;
+.search-see-more:hover {
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+.search-see-more i {
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+}
+
+.search-see-more:hover i {
+    transform: translateY(2px);
 }
 
 /* User search results styling */
@@ -584,4 +800,4 @@
 .notifications-dropdown {
     position: relative;
     margin-left: 1rem;
-} 
+}
