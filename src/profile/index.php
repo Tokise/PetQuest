@@ -29,11 +29,31 @@ $memoryStmt->execute();
 $memoryResult = $memoryStmt->get_result();
 $memoryCount = $memoryResult->fetch_assoc()['memory_count'];
 
-// Get recent memories
-$memories_stmt = $conn->prepare("SELECT * FROM memories WHERE user_id = ? ORDER BY created_at DESC LIMIT 6");
-$memories_stmt->bind_param("i", $_SESSION['user_id']);
+// Get user's memories for the grid
+$profile_user_id = $_SESSION['user_id']; // Assuming this is the user's own profile page
+
+$memories_stmt = $conn->prepare("
+    SELECT 
+        m.id AS memory_id, 
+        m.description AS memory_description, 
+        m.created_at AS memory_created_at,
+        mm.media_type,
+        mm.file_path
+    FROM memories m
+    LEFT JOIN (
+        SELECT 
+            memory_id, 
+            media_type, 
+            file_path,
+            ROW_NUMBER() OVER(PARTITION BY memory_id ORDER BY sort_order ASC, id ASC) as rn
+        FROM memory_media
+    ) mm ON m.id = mm.memory_id AND mm.rn = 1
+    WHERE m.user_id = ?
+    ORDER BY m.created_at DESC
+");
+$memories_stmt->bind_param("i", $profile_user_id);
 $memories_stmt->execute();
-$memories = $memories_stmt->get_result();
+$memories_result = $memories_stmt->get_result();
 
 // Get user's pets
 $pets_stmt = $conn->prepare("SELECT id, name, species, image_path, status FROM pets WHERE owner_id = ? ORDER BY created_at DESC");
@@ -48,6 +68,7 @@ $pets = $pets_stmt->get_result();
     <title>Profile - PetQuest</title>
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../dashboard/css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,24 +84,26 @@ $pets = $pets_stmt->get_result();
                     // Force browser to reload image by adding timestamp
                     $timestamp = time();
                     $coverImageUrl = !empty($user['cover_picture']) ? 
-                        SITE_URL . '/uploads/cover/' . htmlspecialchars($user['cover_picture']) . '?v=' . $timestamp : 
+                        SITE_URL . '/uploads/cover/' . htmlspecialchars($user['cover_picture']) . '?t=' . $timestamp : 
                         SITE_URL . '/assets/images/default-cover.jpg';
                 ?>
                 <img src="<?php echo $coverImageUrl; ?>" 
                      alt="Cover Photo" 
-                     class="profile-cover-image">
+                     class="profile-cover-image"
+                     onerror="this.onerror=null; this.src='<?php echo SITE_URL . '/assets/images/default-cover.jpg'; ?>'">
                 
                 <div class="profile-info-overlay">
                     <div class="profile-image-container">
                         <?php
                             // Also add cache busting for profile image
                             $profileImageUrl = !empty($user['profile_picture']) ? 
-                                SITE_URL . '/uploads/profile/' . htmlspecialchars($user['profile_picture']) . '?v=' . $timestamp : 
+                                SITE_URL . '/uploads/profile/' . htmlspecialchars($user['profile_picture']) . '?t=' . $timestamp : 
                                 SITE_URL . '/assets/images/default-profile.png';
                         ?>
                         <img src="<?php echo $profileImageUrl; ?>" 
                              alt="Profile Picture" 
-                             class="profile-image-large">
+                             class="profile-image-large"
+                             onerror="this.onerror=null; this.src='<?php echo SITE_URL . '/assets/images/default-profile.png'; ?>'">
                     </div>
                          
                     <div class="profile-text-info">
@@ -103,7 +126,7 @@ $pets = $pets_stmt->get_result();
             </div>
             
             <!-- Profile Edit Modal -->
-            <div class="modal" id="profileEditModal">
+            <div class="modal" id="profileEditModal" style="display: none;">
                 <div class="modal-content">
                     <span class="close-btn" id="closeProfileModal">&times;</span>
                     <h2>Edit Profile</h2>
@@ -130,9 +153,10 @@ $pets = $pets_stmt->get_result();
                         
                         <div class="tab-content" id="profile-picture">
                             <div class="profile-image-preview">
-                                <img src="<?php echo !empty($user['profile_picture']) ? '../../uploads/profile/' . htmlspecialchars($user['profile_picture']) : '../../assets/images/default-profile.png'; ?>" 
+                                <img src="<?php echo !empty($user['profile_picture']) ? SITE_URL . '/uploads/profile/' . htmlspecialchars($user['profile_picture']) : SITE_URL . '/assets/images/default-profile.png'; ?>" 
                                      alt="Profile Picture" 
-                                     class="preview-image" id="profileImagePreview">
+                                     class="preview-image" id="profileImagePreview"
+                                     onerror="this.onerror=null; this.src='<?php echo SITE_URL . '/assets/images/default-profile.png'; ?>'">
                             </div>
                             
                             <div class="form-group">
@@ -146,9 +170,10 @@ $pets = $pets_stmt->get_result();
                         
                         <div class="tab-content" id="cover-picture">
                             <div class="cover-image-preview">
-                                <img src="<?php echo !empty($user['cover_picture']) ? '../../uploads/cover/' . htmlspecialchars($user['cover_picture']) : '../../assets/images/default-cover.jpg'; ?>" 
+                                <img src="<?php echo !empty($user['cover_picture']) ? SITE_URL . '/uploads/cover/' . htmlspecialchars($user['cover_picture']) : SITE_URL . '/assets/images/default-cover.jpg'; ?>" 
                                      alt="Cover Picture" 
-                                     class="preview-image" id="coverImagePreview">
+                                     class="preview-image" id="coverImagePreview"
+                                     onerror="this.onerror=null; this.src='<?php echo SITE_URL . '/assets/images/default-cover.jpg'; ?>'">
                             </div>
                             
                             <div class="form-group">
@@ -250,21 +275,60 @@ $pets = $pets_stmt->get_result();
                         </div>
                         
                         <div class="memories-grid">
-                            <?php if ($memories->num_rows === 0): ?>
+                            <?php if ($memories_result->num_rows === 0): ?>
                                 <div class="empty-memories">
                                     <i class="fas fa-images"></i>
                                     <p>Share your pet memories</p>
                                     <p class="empty-subtitle">Add photos and stories of your pet adventures</p>
                                 </div>
                             <?php else: ?>
-                                <?php while ($memory = $memories->fetch_assoc()): ?>
-                                    <div class="memory-card">
-                                        <?php if (!empty($memory['image_path'])): ?>
-                                            <img src="../../uploads/memories/<?php echo htmlspecialchars($memory['image_path']); ?>" alt="Pet Memory">
+                                <?php while ($memory_item = $memories_result->fetch_assoc()): 
+                                    $media_src_path = '';
+                                    if (!empty($memory_item['file_path'])) {
+                                        // Path is relative to /uploads/memories/
+                                        // e.g., images/image.jpg or videos/video.mp4
+                                        $media_src_path = '../../uploads/memories/' . htmlspecialchars($memory_item['file_path']);
+                                    }
+                                ?>
+                                    <div class="memory-card" 
+                                         data-memory-id="<?php echo $memory_item['memory_id']; ?>"
+                                         data-description="<?php echo htmlspecialchars($memory_item['memory_description'] ?? 'No description.'); ?>"
+                                         data-author-name="<?php echo htmlspecialchars($user['name']); ?>" 
+                                         data-created-at="<?php echo htmlspecialchars($memory_item['memory_created_at'] ?? ''); ?>">
+                                        
+                                        <?php if (!empty($memory_item['file_path']) && $memory_item['media_type'] === 'image'): ?>
+                                            <a href="#" class="memory-media-link" 
+                                               data-type="image" 
+                                               data-src="<?php echo $media_src_path; ?>" 
+                                               data-memory-id="<?php echo $memory_item['memory_id']; ?>">
+                                                <img src="<?php echo $media_src_path; ?>" 
+                                                     alt="Pet Memory Image" 
+                                                     class="memory-thumbnail"
+                                                     onerror="this.style.display='none'; console.error('Error loading image: <?php echo $media_src_path; ?>')">
+                                            </a>
+                                        <?php elseif (!empty($memory_item['file_path']) && $memory_item['media_type'] === 'video'): ?>
+                                            <a href="#" class="memory-media-link" 
+                                               data-type="video" 
+                                               data-src="<?php echo $media_src_path; ?>" 
+                                               data-memory-id="<?php echo $memory_item['memory_id']; ?>">
+                                                <div class="video-placeholder-thumbnail" style="background-color: #000; color: #fff; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border-radius: 8px; position: relative; cursor: pointer;">
+                                                    <i class="fas fa-play-circle" style="font-size: 3em; z-index: 1;"></i>
+                                                     <video muted loop style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; border-radius: 8px; opacity:0.7;" preload="metadata">
+                                                        <source src="<?php echo $media_src_path; ?>#t=0.5" type="video/<?php echo pathinfo($memory_item['file_path'], PATHINFO_EXTENSION); ?>">
+                                                    </video>
+                                                </div>
+                                            </a>
+                                        <?php elseif (empty($memory_item['file_path'])): // Case where memory has description but no media ?>
+                                            <div class="memory-text-only-placeholder" style="display: flex; align-items: center; justify-content: center; width:100%; aspect-ratio: 16/9; background-color: #f0f0f0; border-radius: 8px;">
+                                                <i class="far fa-file-alt" style="font-size: 3em; color: #ccc;"></i>
+                                            </div>
                                         <?php endif; ?>
+                                        
                                         <div class="memory-overlay">
-                                            <span class="memory-date"><?php echo date('M d, Y', strtotime($memory['created_at'])); ?></span>
-                                            <p><?php echo htmlspecialchars($memory['description']); ?></p>
+                                            <span class="memory-date"><?php echo date('M d, Y', strtotime($memory_item['memory_created_at'])); ?></span>
+                                            <?php if(!empty($memory_item['memory_description'])): ?>
+                                                <p><?php echo htmlspecialchars(mb_strimwidth($memory_item['memory_description'], 0, 100, "...")); ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 <?php endwhile; ?>
@@ -275,6 +339,10 @@ $pets = $pets_stmt->get_result();
             </div>
         </div>
     </div>
+
+    <?php include_once '../../includes/media-viewer-modal.php'; ?>
+
     <script src="js/profile.js"></script>
+    <script src="../../assets/js/media-modal.js"></script>
 </body>
 </html>

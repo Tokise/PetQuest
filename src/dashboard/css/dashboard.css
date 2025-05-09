@@ -166,12 +166,13 @@
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: -2rem;
 }
 
 .create-memory-card {
     padding: 1.5rem;
-    border-bottom: 1px solid #eee;
 }
+
 
 .memory-header {
     display: flex;
@@ -249,23 +250,29 @@
 
 /* Recent Memories */
 .recent-memories {
-    padding: 1.5rem;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .memory-post {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
     padding: 1.5rem;
-    border-bottom: 1px solid #eee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .memory-post:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .memory-post-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
     margin-bottom: 1rem;
+    gap: 0.75rem;
 }
 
 .memory-post-info {
@@ -274,25 +281,150 @@
 }
 
 .memory-author {
-    font-weight: 500;
-    color: #333;
+    font-weight: 600;
+    color: #333333;
+    font-size: 0.95rem;
 }
 
 .memory-time {
     font-size: 0.8rem;
-    color: #666;
+    color: #757575;
 }
 
 .memory-description {
+    color: #424242;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
-    color: #444;
-    line-height: 1.5;
+    white-space: pre-wrap;
 }
 
-.memory-image {
-    width: 100%;
+.memory-image,
+.video-placeholder-thumbnail {
     border-radius: 8px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.video-placeholder-thumbnail video {
+    border-radius: 8px;
+}
+
+/* Interaction Buttons Styling */
+.memory-post-interactions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 0.75rem;
     margin-top: 1rem;
+    border-top: 1px solid #eeeeee;
+}
+
+.btn-interaction {
+    background-color: transparent;
+    border: none;
+    color: #616161;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-interaction i {
+    font-size: 1.1em;
+}
+
+.btn-interaction:hover {
+    color: var(--primary-color);
+    background-color: #f5f5f5;
+}
+
+/* Inline Comments Section Styling (Basic) */
+.comments-section-inline {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #e0e0e0;
+}
+
+.comments-section-inline .comment-item {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 0.9rem;
+}
+.comments-section-inline .comment-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.comments-section-inline .comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comments-section-inline .comment-content .comment-author {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.85rem;
+}
+.comments-section-inline .comment-content .comment-text {
+    color: #555;
+    line-height: 1.5;
+    margin: 0.25rem 0;
+    white-space: pre-wrap;
+}
+.comments-section-inline .comment-content .comment-date {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.comments-section-inline .inline-comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.comments-section-inline .inline-comment-form textarea {
+    flex-grow: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 40px;
+}
+
+.comments-section-inline .inline-comment-form button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+.comments-section-inline .inline-comment-form button:hover {
+    background-color: var(--secondary-color);
+}
+.comments-section-inline .no-comments-yet {
+    color: #777;
+    font-style: italic;
+    padding: 10px 0;
+}
+.comments-section-inline .comments-loading {
+     color: #777;
+     padding: 10px 0;
 }
 
 /* Dashboard Layout Updates */
@@ -301,125 +433,7 @@
     grid-template-columns: 1fr 350px;
     gap: 2rem;
     margin-top: 2rem;
-}
-
-/* Slideshow Section */
-.slideshow-section {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    height: fit-content;
-    margin-top: 30px;
-}
-
-.slideshow-header {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-.slideshow-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #333;
-}
-
-.slideshow-container {
-    position: relative;
-    height: 400px;
-}
-
-.slide {
-    display: none;
-    padding: 1rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    position: absolute;
-    width: 100%;
-}
-
-.slide.active {
-    display: block;
-    opacity: 1;
-}
-
-.slide-content {
-    text-align: center;
-}
-
-.slide-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.slide-info h4 {
-    margin: 0 0 0.5rem;
-    color: #333;
-}
-
-.slide-status {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-}
-
-.slideshow-nav {
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
-    gap: 0.5rem;
-}
-
-.slide-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #ddd;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.slide-dot.active {
-    background: var(--primary-color);
-}
-
-.slide-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
-}
-
-.slide-actions .btn {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.slide-actions .btn-success {
-    background: linear-gradient(45deg, #4CAF50, #45a049);
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
-}
-
-.slide-actions .btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.slide-actions .btn i {
-    font-size: 0.9rem;
+    align-items: start;
 }
 
 /* Mobile Menu */
@@ -474,6 +488,7 @@
         grid-template-columns: 1fr;
         text-align: center;
         gap: 1rem;
+        height: 150px;
     }
 
     .profile-image {
@@ -594,3 +609,194 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* NEW My Pets Slideshow Styles */
+.my-pets-slideshow-section {
+    background-color: var(--white);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-top: -0.6rem;
+    position: fixed;
+    top: calc(var(--header-height) + 2rem);
+    right: 2rem;
+    width: 350px;
+
+    max-height: calc(100vh - var(--header-height) - 4rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: 0;
+}
+
+.my-pets-slideshow-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.my-pets-slideshow-section .section-header h3 {
+    margin: 0;
+}
+
+.pets-slideshow-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pets-slideshow-arrow {
+    background-color: #f0f0f0;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pets-slideshow-arrow:hover {
+    background-color: #e0e0e0;
+}
+
+.pets-slideshow-wrapper {
+    overflow: hidden; /* Crucial for horizontal slideshow effect */
+    width: 100%; /* Ensure it constrains the container */
+    position: relative; /* For potential absolute positioning of children if needed, though flex should handle it */
+}
+
+.pets-slideshow-container {
+    display: flex; /* Makes items align horizontally */
+    transition: transform 0.5s ease-in-out; /* Animation for sliding */
+    width: auto; /* Will be wider than wrapper if multiple slides */
+}
+
+.pets-slide-item {
+    min-width: 100%; /* Each slide takes full width of the wrapper */
+    flex-shrink: 0; /* Prevent slides from shrinking */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    padding: 1rem; /* Add more padding to the slide item itself to act as a container */
+    background: var(--white); /* Give it a white background to appear as a card */
+    border-radius: 8px; /* Rounded corners for the card */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* A subtle shadow for the card */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    /* max-height: 400px; /* Optional: if you want to constrain height */
+    /* overflow-y: auto; /* Optional: if content within card might exceed max-height */
+}
+
+.pets-slide-item .pet-list-image {
+    width: 100%;
+    max-width: 180px; /* Slightly smaller image */
+    height: 140px; /* Adjust height accordingly */
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border: 1px solid #eee; /* Subtle border for image */
+    margin-left: auto; /* Added to center the block */
+    margin-right: auto; /* Added to center the block */
+}
+
+.pets-slide-item .pet-list-image img,
+.pets-slide-item .pet-list-image .pet-image-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pets-slide-item .pet-list-image .pet-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    color: #adb5bd;
+    font-size: 2rem;
+}
+
+
+
+.pets-slide-item .pet-list-name-slideshow {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0.25rem 0;
+    color: var(--text-color); /* Ensure good contrast */
+}
+
+.pets-slide-item .pet-list-type-slideshow {
+    font-size: 0.9rem;
+    color: #555; /* Darker gray for better readability */
+    margin-bottom: 0.5rem;
+}
+
+.pets-slide-item .pet-status-badge {
+    display: inline-flex; /* Use flex to align icon and text */
+    align-items: center;
+    margin-bottom: 0.75rem; /* More space below status */
+    font-size: 0.8rem;
+    padding: 0.3em 0.8em;
+    border-radius: 15px; /* Pill shape */
+}
+
+.pets-slide-item .status-icon-display {
+    font-size: 0.9rem; /* Adjusted icon size */
+    margin-right: 0.4em; /* Space between icon and text if icon is inside badge */
+    /* If icon is separate like in screenshot, margin-left was already there */
+}
+
+/* Specific styling for status text and icon if icon is outside the badge, like your screenshot */
+.pet-status-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+.pet-status-line .pet-status-badge {
+    margin-bottom: 0; /* Remove bottom margin if it's part of this line */
+}
+.pet-status-line .status-icon-display {
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+}
+
+
+.pets-slide-item .pet-actions-dashboard {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    justify-content: center;
+    width: 100%; /* Make button container take full width */
+    max-width: 220px; /* Constrain width of button area */
+}
+
+.pets-slide-item .pet-actions-dashboard .btn {
+    /* flex-grow: 1; /* Remove this if stacking vertically */
+    /* min-width: 120px; /* Not as relevant for vertical stack */
+    width: 100%; /* Make buttons full width of their container */
+}
+
+.pets-slide-item .view-details-btn-slideshow {
+    margin-top: 0.5rem;
+    /* width: calc(100% - 1rem); /* Adjust if actions are stacked */
+    width: 100%; /* Make full width like other buttons */
+}
+
+.empty-pets-slide {
+    width: 100% !important; /* Override any flex sizing for the empty state */
+    text-align: center;
+    padding: 2rem;
+    color: #777;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px; /* Give it some height */
+}
+
+

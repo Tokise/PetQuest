@@ -10,7 +10,7 @@
         $currentPage = $_SERVER['REQUEST_URI'];
         $isDashboard = strpos($currentPage, '/dashboard/') !== false;
         $isMissing = strpos($currentPage, '/missing/') !== false;
-        $isReport = strpos($currentPage, '/report/') !== false;
+        $isAddPet  = strpos($currentPage, '/add-pets/') !== false;
         $isProfilePage = strpos($currentPage, '/profile/') !== false;
         $isSettingsPage = strpos($currentPage, '/settings/') !== false;
         
@@ -29,9 +29,9 @@
                     <i class="fas fa-home"></i>
                     <span class="tooltip">Dashboard</span>
                 </a>
-                <a href="<?php echo SITE_URL; ?>/src/report/report-pet.php" class="nav-item <?php echo $isReport ? 'active' : ''; ?>">
+                <a href="<?php echo SITE_URL; ?>/src/add-pets/add-pet.php" class="nav-item <?php echo $isAddPet ? 'active' : ''; ?>">
                     <i class="fas fa-plus-circle"></i>
-                    <span class="tooltip">Report Missing Pet</span>
+                    <span class="tooltip">Add Pet</span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/src/missing/missing-pets.php" class="nav-item <?php echo $isMissing ? 'active' : ''; ?>">
                     <i class="fas fa-paw"></i>
@@ -156,7 +156,7 @@
             <div class="user-menu" id="userMenu">
                 <?php
                 // Get user information including profile picture and bio
-                $stmt = $conn->prepare("SELECT name, profile_picture, bio FROM users WHERE id = ?");
+                $stmt = $conn->prepare("SELECT name, profile_picture, cover_picture, bio FROM users WHERE id = ?");
                 $stmt->bind_param("i", $user_id);
                 $stmt->execute();
                 $user = $stmt->get_result()->fetch_assoc();

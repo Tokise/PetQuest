@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     initProfileEditModal();
     setupImagePreview();
+
+    // Note: We still need to add data-memory-id to the .memory-card elements in profile/index.php HTML
+    // This note should be outdated as data-memory-id was added.
 });
 
 function initProfileEditModal() {

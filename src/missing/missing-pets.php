@@ -13,15 +13,29 @@ $query = "
         p.*, 
         u.name as owner_name, 
         u.email as owner_email,
-        mr.last_seen_date,
-        mr.last_seen_location,
-        DATEDIFF(CURRENT_DATE, mr.last_seen_date) as days_missing,
+        latest_mr.last_seen_date,
+        latest_mr.last_seen_location,
+        DATEDIFF(CURRENT_DATE, latest_mr.last_seen_date) as days_missing,
         COALESCE((SELECT SUM(owner_unread_count + founder_unread_count) 
                  FROM conversations 
                  WHERE pet_id = p.id), 0) as message_count
     FROM pets p 
     JOIN users u ON p.owner_id = u.id 
-    LEFT JOIN missing_reports mr ON p.id = mr.pet_id
+    LEFT JOIN (
+        SELECT
+            mr_inner.id AS report_id, 
+            mr_inner.pet_id,
+            mr_inner.last_seen_date,
+            mr_inner.last_seen_location,
+            mr_inner.additional_info,
+            mr_inner.owner_id,
+            mr_inner.contact_info,
+            mr_inner.status AS report_status,
+            mr_inner.created_at AS report_created_at_ts, 
+            ROW_NUMBER() OVER(PARTITION BY mr_inner.pet_id ORDER BY mr_inner.created_at DESC) as rn
+        FROM missing_reports mr_inner
+        WHERE mr_inner.status = 'active'
+    ) latest_mr ON p.id = latest_mr.pet_id AND latest_mr.rn = 1
     WHERE p.status = 'missing'
 ";
 
@@ -44,7 +58,7 @@ if (!empty($type)) {
 }
 
 if (!empty($location)) {
-    $query .= " AND mr.last_seen_location LIKE ?";
+    $query .= " AND latest_mr.last_seen_location LIKE ?";
     $params[] = "%$location%";
     $types .= "s";
 }
@@ -121,7 +135,7 @@ $petTypes = $typeStmt->fetch_all(MYSQLI_ASSOC);
                         <h3>No Missing Pets Found</h3>
                         <p>There are currently no missing pets matching your search criteria.</p>
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <a href="../report/report-pet.php" class="btn btn-primary">Report Missing Pet</a>
+                            <a href="../add-pets/add-pet.php" class="btn btn-primary">Report Missing Pet</a>
                         <?php else: ?>
                             <a href="../../auth/login.php" class="btn btn-primary">Login to Report Missing Pet</a>
                         <?php endif; ?>

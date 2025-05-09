@@ -546,4 +546,98 @@ p {
     font-size: 0.75rem;
     color: #999;
     margin-top: 4px;
+}
+
+/* Media Viewer Modal - Comment Area Enhancements */
+
+/* Overall Media Viewer Modal Styling */
+#mediaViewerModal .modal-content.media-modal-content {
+    max-width: 80vw; /* Reduced from 90vw */
+    max-height: 80vh; /* Reduced from 90vh */
+    width: auto; /* Retain from inline */
+    background: transparent; /* Retain from inline */
+    border: none; /* Retain from inline */
+    box-shadow: none; /* Retain from inline */
+    padding: 0; /* Retain from inline */
+    display: flex; /* Retain from inline */
+    flex-direction: row; /* Retain from inline */
+}
+
+#mediaViewerModal .modal-media-pane {
+    /* flex: 2; display: flex; align-items: center; justify-content: center; background-color: #000; overflow: hidden; position: relative; (from inline) */
+    /* These can remain inline or be moved here if further customization is needed */
+    max-height: 100%; /* Ensure it doesn't exceed the new modal-content height */
+}
+
+#mediaViewerModal .modal-interactions-pane {
+    /* flex: 1; background: #fff; color: #333; padding: 20px; (from inline) */
+    display: flex; 
+    flex-direction: column; 
+    overflow-y: auto; 
+    max-height: 100%; /* It should take full height of the parent .media-modal-content which is now 80vh */
+}
+
+#mediaViewerModal .modal-interactions-pane #modalCommentsArea {
+    flex-grow: 1; /* Takes available vertical space */
+    overflow-y: auto !important; /* Ensure this is applied and makes it scrollable */
+    max-height: 250px; /* Using a fixed pixel value for testing. Adjust this or use vh e.g. 30vh */
+    min-height: 100px; /* Ensure it has some minimum height even if no comments */
+    padding-right: 5px; /* Add a little padding if scrollbar is hidden to avoid content touching edge */
+    margin-bottom: 15px; /* Already inline */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+#mediaViewerModal .modal-interactions-pane #modalCommentsArea::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox (less straightforward, often involves making it transparent or very thin) */
+#mediaViewerModal .modal-interactions-pane #modalCommentsArea {
+    scrollbar-width: none;  /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge (older versions) */
+}
+
+/* Ensure modal comment items have some base styling if not already globally defined elsewhere */
+.modal-comment-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-comment-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.modal-comment-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-comment-item div {
+    flex-grow: 1;
+}
+
+.modal-comment-item strong {
+    font-size: 0.9em;
+    display: block; /* Ensure it takes its own line or use flex for better alignment with date */
+    margin-bottom: 2px;
+}
+
+.modal-comment-item p {
+    font-size: 0.95em;
+    margin: 0 0 3px 0;
+    white-space: pre-wrap; /* Respect newlines in comments */
+    word-wrap: break-word; /* Break long words */
+    line-height: 1.4;
+}
+
+.modal-comment-item small {
+    font-size: 0.75em;
+    color: #777;
 } 
