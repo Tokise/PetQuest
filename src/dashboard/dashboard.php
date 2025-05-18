@@ -456,12 +456,12 @@ $recent_pets = $stmt->get_result();
                         return;
                     }
 
-                    const petListItem = this.closest('.pet-list-item');
+                    const petListItem = this.closest('.pets-slide-item');
                     if (!petListItem) return; // Should not happen if button is inside item
 
                     const petId = this.dataset.petId;
-                    const petNameElem = petListItem.querySelector('.pet-list-name');
-                    const petName = petNameElem ? petNameElem.firstChild.textContent.trim() : 'Unknown Pet';
+                    const petNameElem = petListItem.querySelector('.pet-list-name-slideshow');
+                    const petName = petNameElem ? petNameElem.textContent.trim() : 'Unknown Pet';
                     
                     let petImageSrc = petListItem.querySelector('.pet-list-image img')?.src;
                     if (!petImageSrc) {
